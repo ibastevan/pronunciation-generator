@@ -6,7 +6,7 @@
     <title>Lexicon XML Generator</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 20px; }
-        input, button { margin: 10px 0; display: block; }
+        input, select, button { margin: 10px 0; display: block; }
     </style>
 </head>
 <body>
@@ -15,8 +15,14 @@
         <label for="grapheme">Grapheme:</label>
         <input type="text" id="grapheme" required>
         
-        <label for="phoneme">Phoneme or Alias:</label>
-        <input type="text" id="phoneme" required>
+        <label for="type">Type:</label>
+        <select id="type" required>
+            <option value="phoneme">Phoneme</option>
+            <option value="alias">Alias</option>
+        </select>
+        
+        <label for="value">Value:</label>
+        <input type="text" id="value" required>
         
         <button type="button" onclick="addEntry()">Add Entry</button>
     </form>
