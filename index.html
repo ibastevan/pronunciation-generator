@@ -4,60 +4,105 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lexicon XML Generator</title>
-    <!-- Google Material Icons -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <!-- Materialize CSS for Material Design -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-    <style>
-        .container { margin-top: 20px; }
-        .entry-actions { margin-left: 10px; }
-        .radio-group { margin-top: 10px; }
-    </style>
+    <!-- Materialize CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
         <h1 class="center-align">Lexicon XML Generator</h1>
         
-        <form id="inputForm" class="row">
-            <div class="input-field col s12 m6">
-                <input type="text" id="grapheme" required>
-                <label for="grapheme">Grapheme</label>
-            </div>
-            <div class="input-field col s12 m6">
-                <div class="radio-group">
-                    <p>
-                        <label>
-                            <input name="type" type="radio" value="phoneme" checked>
-                            <span>Phoneme</span>
-                        </label>
-                    </p>
-                    <p>
-                        <label>
-                            <input name="type" type="radio" value="alias">
-                            <span>Alias</span>
-                        </label>
-                    </p>
+        <form id="inputForm">
+            <div class="row">
+                <div class="input-field col s6">
+                    <input id="grapheme" type="text" class="validate">
+                    <label for="grapheme">Grapheme</label>
+                </div>
+                <div class="input-field col s6">
+                    <input id="value" type="text" class="validate">
+                    <label for="value">Value</label>
                 </div>
             </div>
-            <div class="input-field col s12 m6">
-                <input type="text" id="value" required>
-                <label for="value">Value</label>
+
+            <div class="row">
+                <p>Type:</p>
+                <p>
+                    <label>
+                        <input name="type" type="radio" value="phoneme" checked>
+                        <span>Phoneme</span>
+                    </label>
+                </p>
+                <p>
+                    <label>
+                        <input name="type" type="radio" value="alias">
+                        <span>Alias</span>
+                    </label>
+                </p>
             </div>
-            <div class="input-field col s12">
-                <button type="button" class="btn waves-effect waves-light" onclick="addEntry()">Add Entry</button>
+
+            <div class="row">
+                <button type="button" class="btn" onclick="addEntry()">Add Entry</button>
             </div>
         </form>
 
-        <h2 class="center-align">Entries</h2>
-        <ul id="entriesList" class="collection"></ul>
-        
-        <h2 class="center-align">Upload XML</h2>
-        <input type="file" id="fileInput" />
+        <!-- Search and Filter -->
+        <div class="row">
+            <div class="input-field col s6">
+                <input id="searchInput" type="text" class="validate">
+                <label for="searchInput">Search</label>
+            </div>
+            <div class="input-field col s6">
+                <select id="typeFilter">
+                    <option value="all" selected>All Types</option>
+                    <option value="phoneme">Phoneme</option>
+                    <option value="alias">Alias</option>
+                </select>
+                <label>Filter by Type</label>
+            </div>
+        </div>
 
-        <button id="downloadButton" class="btn waves-effect waves-light" onclick="downloadXML()">Download XML</button>
+        <!-- Sorting -->
+        <div class="row">
+            <div class="input-field col s12">
+                <select id="sortSelect">
+                    <option value="grapheme" selected>Sort by Grapheme</option>
+                    <option value="value">Sort by Value</option>
+                </select>
+                <label>Sort By</label>
+            </div>
+        </div>
+
+        <!-- Entries List -->
+        <ul id="entriesList" class="collection"></ul>
+
+        <!-- Pagination -->
+        <div class="row">
+            <div class="input-field col s12">
+                <select id="entriesPerPage">
+                    <option value="10">10 entries per page</option>
+                    <option value="25" selected>25 entries per page</option>
+                    <option value="50">50 entries per page</option>
+                    <option value="100">100 entries per page</option>
+                </select>
+                <label>Entries per Page</label>
+            </div>
+        </div>
+        
+        <ul id="pagination" class="pagination"></ul>
+
+        <!-- File Upload and Download -->
+        <div class="row">
+            <div class="input-field col s6">
+                <input type="file" id="fileInput">
+                <label for="fileInput">Upload XML File</label>
+            </div>
+            <div class="input-field col s6">
+                <button class="btn" onclick="downloadXML()">Download XML</button>
+            </div>
+        </div>
     </div>
 
-    <!-- Materialize JavaScript -->
+    <!-- Materialize JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script src="app.js"></script>
 </body>
