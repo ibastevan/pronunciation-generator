@@ -16,11 +16,11 @@
 
         <!-- File Upload Section -->
         <div class="row file-upload">
-            <div class="input-field col s12">
+            <div class="input-field col s6">
                 <input id="fileInput" type="file" accept=".xml">
                 <label for="fileInput">Upload XML</label>
             </div>
-            <div class="input-field col s12">
+            <div class="input-field col s6">
                 <input id="csvFileInput" type="file" accept=".csv">
                 <label for="csvFileInput">Upload CSV</label>
             </div>
@@ -93,13 +93,17 @@
     <!-- Download Section -->
     <div class="container btn-container">
         <button class="btn" id="downloadBtn">Download</button>
-        <div class="input-field col s12">
-            <select id="fileFormat">
-                <option value="xml" selected>XML</option>
-                <option value="pls">PLS</option>
-                <option value="csv">CSV</option>
-            </select>
-            <label>File Format</label>
+        <div class="input-field">
+            <div class="col s6">
+                <select id="fileFormat">
+                    <option value="xml" selected>XML</option>
+                    <option value="pls">PLS</option>
+                    <option value="csv">CSV</option>
+                </select>
+            </div>
+            <div class="col s6">
+                <label>File Format</label>
+            </div>
         </div>
     </div>
 
