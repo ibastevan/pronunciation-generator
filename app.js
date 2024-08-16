@@ -105,28 +105,40 @@ document.getElementById('fileInput').addEventListener('change', function(event) 
 });
 
 function parseXML(xmlString) {
-    const parser = new DOMParser();
-    const xmlDoc = parser.parseFromString(xmlString, "application/xml");
-    const entriesList = xmlDoc.getElementsByTagName("entry");
-    
-    entries.length = 0; // Clear existing entries
-    for (let i = 0; i < entriesList.length; i++) {
-        const entry = entriesList[i];
-        const grapheme = entry.getElementsByTagName("grapheme")[0].textContent;
-        const phoneme = entry.getElementsByTagName("phoneme")[0];
-        const alias = entry.getElementsByTagName("alias")[0];
+    try {
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(xmlString, "application/xml");
+
+        // Check if there were any parsing errors
+        const parserError = xmlDoc.querySelector('parsererror');
+        if (parserError) {
+            M.toast({html: 'Invalid XML file. Please upload a correct XML file.', classes: 'rounded'});
+            return;
+        }
+
+        const entriesList = xmlDoc.getElementsByTagName("entry");
+        entries.length = 0; // Clear existing entries
         
-        let type = 'phoneme';
-        let value = '';
-        if (phoneme) {
-            value = phoneme.textContent;
-        } else if (alias) {
-            type = 'alias';
-            value = alias.textContent;
+        for (let i = 0; i < entriesList.length; i++) {
+            const entry = entriesList[i];
+            const grapheme = entry.getElementsByTagName("grapheme")[0]?.textContent || '';
+            const phoneme = entry.getElementsByTagName("phoneme")[0];
+            const alias = entry.getElementsByTagName("alias")[0];
+            
+            let type = 'phoneme';
+            let value = '';
+            if (phoneme) {
+                value = phoneme.textContent;
+            } else if (alias) {
+                type = 'alias';
+                value = alias.textContent;
+            }
+            
+            entries.push({ grapheme, type, value });
         }
         
-        entries.push({ grapheme, type, value });
+        updateEntriesList();
+    } catch (error) {
+        M.toast({html: 'Error parsing XML file.', classes: 'rounded'});
     }
-    
-    updateEntriesList();
 }
