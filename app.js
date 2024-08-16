@@ -92,15 +92,20 @@ function downloadXML() {
 
 document.getElementById('fileInput').addEventListener('change', function(event) {
     const file = event.target.files[0];
-    if (file && file.type === 'application/xml') {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const xmlString = e.target.result;
-            parseXML(xmlString);
-        };
-        reader.readAsText(file);
+    if (file) {
+        // Ensure the file is XML based on the file extension or MIME type
+        if (file.type === 'application/xml' || file.name.endsWith('.xml')) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const xmlString = e.target.result;
+                parseXML(xmlString);
+            };
+            reader.readAsText(file);
+        } else {
+            M.toast({html: 'Please upload a valid XML file with .xml extension.', classes: 'rounded'});
+        }
     } else {
-        M.toast({html: 'Please upload a valid XML file.', classes: 'rounded'});
+        M.toast({html: 'No file selected.', classes: 'rounded'});
     }
 });
 
@@ -113,6 +118,7 @@ function parseXML(xmlString) {
         const parserError = xmlDoc.querySelector('parsererror');
         if (parserError) {
             M.toast({html: 'Invalid XML file. Please upload a correct XML file.', classes: 'rounded'});
+            console.error('XML Parsing Error:', parserError.textContent); // Log error for debugging
             return;
         }
 
@@ -140,5 +146,6 @@ function parseXML(xmlString) {
         updateEntriesList();
     } catch (error) {
         M.toast({html: 'Error parsing XML file.', classes: 'rounded'});
+        console.error('Parsing Error:', error); // Log error for debugging
     }
 }
