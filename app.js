@@ -3,14 +3,18 @@ let currentPage = 1;
 let entriesPerPage = 25; // Default entries per page
 let filteredEntries = [];
 
-// Initialize Materialize components
+// Initialize Materialize components and load data
 document.addEventListener('DOMContentLoaded', function() {
     M.FormSelect.init(document.querySelectorAll('select'), {});
     M.updateTextFields(); // Ensure labels are updated
+
+    // Load entries from Local Storage
+    loadEntriesFromLocalStorage();
+
     setupPagination();
     setupSorting();
     setupFiltering();
-    loadEntries();
+    updateEntriesList();
 });
 
 function addEntry() {
@@ -20,6 +24,7 @@ function addEntry() {
 
     if (grapheme && value) {
         entries.push({ grapheme, type, value });
+        saveEntriesToLocalStorage();
         updateEntriesList();
         document.getElementById('inputForm').reset();
         document.querySelector('input[name="type"][value="phoneme"]').checked = true;
@@ -121,11 +126,13 @@ function editEntry(index) {
     M.updateTextFields(); // Ensure labels are updated
     M.FormSelect.init(document.querySelectorAll('select'), {}); // Reinitialize select elements
     entries.splice(entries.indexOf(filteredEntries[index]), 1); // Remove the entry for re-adding with updated details
+    saveEntriesToLocalStorage();
     updateEntriesList();
 }
 
 function removeEntry(index) {
     entries.splice(entries.indexOf(filteredEntries[index]), 1);
+    saveEntriesToLocalStorage();
     updateEntriesList();
 }
 
@@ -167,6 +174,17 @@ function downloadXML() {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+}
+
+function saveEntriesToLocalStorage() {
+    localStorage.setItem('lexiconEntries', JSON.stringify(entries));
+}
+
+function loadEntriesFromLocalStorage() {
+    const storedEntries = localStorage.getItem('lexiconEntries');
+    if (storedEntries) {
+        entries.push(...JSON.parse(storedEntries));
+    }
 }
 
 document.getElementById('fileInput').addEventListener('change', function(event) {
@@ -222,6 +240,7 @@ function parseXML(xmlString) {
             entries.push({ grapheme, type, value });
         }
         
+        saveEntriesToLocalStorage(); // Save new entries to local storage
         updateEntriesList();
     } catch (error) {
         M.toast({html: 'Error parsing XML file.', classes: 'rounded'});
