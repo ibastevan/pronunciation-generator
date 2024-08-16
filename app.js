@@ -37,7 +37,8 @@ class LexiconGenerator {
             this.entries.push({ grapheme, type, value });
             this.saveEntriesToLocalStorage();
             this.updateEntriesList();
-            document.getElementById('inputForm').reset();
+            document.getElementById('grapheme').value = '';
+            document.getElementById('value').value = '';
             document.querySelector('input[name="type"][value="phoneme"]').checked = true;
             M.updateTextFields(); // Ensure labels are updated
             M.FormSelect.init(document.querySelectorAll('select'), {}); // Reinitialize select elements
@@ -97,12 +98,22 @@ class LexiconGenerator {
         let paginationHTML = '';
 
         for (let i = 1; i <= totalPages; i++) {
-            paginationHTML += `<li class="page-item ${i === this.currentPage ? 'active' : ''}">
-                <a href="#!" class="page-link" onclick="lexiconGen.changePage(${i})">${i}</a>
-            </li>`;
+            paginationHTML += `
+                <li class="page-item ${i === this.currentPage ? 'active' : ''}">
+                    <a href="#!" class="page-link" data-page="${i}">${i}</a>
+                </li>`;
         }
 
-        document.getElementById('pagination').innerHTML = paginationHTML;
+        const paginationElement = document.getElementById('pagination');
+        paginationElement.innerHTML = paginationHTML;
+
+        // Add click event listeners to pagination links
+        paginationElement.querySelectorAll('.page-link').forEach(link => {
+            link.addEventListener('click', (event) => {
+                event.preventDefault();
+                this.changePage(parseInt(link.getAttribute('data-page')));
+            });
+        });
     }
 
     renderEntries() {
@@ -126,7 +137,7 @@ class LexiconGenerator {
 
     changePage(page) {
         this.currentPage = page;
-        this.renderEntries();
+        this.updateEntriesList();
     }
 
     editEntry(index) {
