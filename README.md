@@ -24,5 +24,5 @@ The Lexicon XML Generator is a simple Single Page Application (SPA) built using 
 1. **Clone the Repository**
 
    ```bash
-   git clone https://github.com/yourusername/lexicon-xml-generator.git
+   git clone https://github.com/ibastevan/pronunciation-generator.git
    cd lexicon-xml-generator
