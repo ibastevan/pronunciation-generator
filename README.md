@@ -25,4 +25,4 @@ The Lexicon XML Generator is a simple Single Page Application (SPA) built using 
 
    ```bash
    git clone https://github.com/ibastevan/pronunciation-generator.git
-   cd lexicon-xml-generator
+   cd pronunciation-generator
