@@ -45,13 +45,13 @@
             </div>
         </form>
 
-        <!-- Search and Filter -->
+        <!-- Search, Filter, Sort, Entries per Page -->
         <div class="row">
-            <div class="input-field col s6">
+            <div class="input-field col s12 m3">
                 <input id="searchInput" type="text" class="validate">
                 <label for="searchInput">Search</label>
             </div>
-            <div class="input-field col s6">
+            <div class="input-field col s12 m3">
                 <select id="typeFilter">
                     <option value="all" selected>All Types</option>
                     <option value="phoneme">Phoneme</option>
@@ -59,25 +59,14 @@
                 </select>
                 <label>Filter by Type</label>
             </div>
-        </div>
-
-        <!-- Sorting -->
-        <div class="row">
-            <div class="input-field col s12">
+            <div class="input-field col s12 m3">
                 <select id="sortSelect">
                     <option value="grapheme" selected>Sort by Grapheme</option>
                     <option value="value">Sort by Value</option>
                 </select>
                 <label>Sort By</label>
             </div>
-        </div>
-
-        <!-- Entries List -->
-        <ul id="entriesList" class="collection"></ul>
-
-        <!-- Pagination -->
-        <div class="row">
-            <div class="input-field col s12">
+            <div class="input-field col s12 m3">
                 <select id="entriesPerPage">
                     <option value="10">10 entries per page</option>
                     <option value="25" selected>25 entries per page</option>
@@ -87,17 +76,30 @@
                 <label>Entries per Page</label>
             </div>
         </div>
-        
-        <ul id="pagination" class="pagination"></ul>
+
+        <!-- Entries List -->
+        <ul id="entriesList" class="collection"></ul>
+
+        <!-- Pagination -->
+        <div class="row">
+            <ul id="pagination" class="pagination"></ul>
+        </div>
 
         <!-- File Upload and Download -->
         <div class="row">
-            <div class="input-field col s6">
-                <input type="file" id="fileInput">
-                <label for="fileInput">Upload XML File</label>
+            <div class="input-field col s12 m6">
+                <div class="file-field input-field">
+                    <div class="btn">
+                        <span>Upload XML</span>
+                        <input type="file" id="fileInput">
+                    </div>
+                    <div class="file-path-wrapper">
+                        <input class="file-path validate" type="text" placeholder="Choose an XML file">
+                    </div>
+                </div>
             </div>
-            <div class="input-field col s6">
-                <button class="btn" onclick="downloadXML()">Download XML</button>
+            <div class="input-field col s12 m6">
+                <button class="btn-large" onclick="downloadXML()">Download XML</button>
             </div>
         </div>
     </div>
