@@ -11,6 +11,7 @@
     <style>
         .container { margin-top: 20px; }
         .entry-actions { margin-left: 10px; }
+        .radio-group { margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -23,17 +24,26 @@
                 <label for="grapheme">Grapheme</label>
             </div>
             <div class="input-field col s12 m6">
-                <select id="type" required>
-                    <option value="phoneme" selected>Phoneme</option>
-                    <option value="alias">Alias</option>
-                </select>
-                <label>Type</label>
+                <div class="radio-group">
+                    <p>
+                        <label>
+                            <input name="type" type="radio" value="phoneme" checked>
+                            <span>Phoneme</span>
+                        </label>
+                    </p>
+                    <p>
+                        <label>
+                            <input name="type" type="radio" value="alias">
+                            <span>Alias</span>
+                        </label>
+                    </p>
+                </div>
             </div>
             <div class="input-field col s12 m6">
                 <input type="text" id="value" required>
                 <label for="value">Value</label>
             </div>
-            <div class="input-field col s12 m6">
+            <div class="input-field col s12">
                 <button type="button" class="btn waves-effect waves-light" onclick="addEntry()">Add Entry</button>
             </div>
         </form>
