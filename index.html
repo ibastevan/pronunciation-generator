@@ -6,36 +6,27 @@
     <title>Lexicon Generator</title>
     <!-- Materialize CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
-    <style>
-        .input-field {
-            margin-bottom: 0;
-        }
-        .page-link {
-            cursor: pointer;
-        }
-        .page-item.active .page-link {
-            background-color: #26a69a;
-            border-color: #26a69a;
-        }
-        .file-upload {
-            margin-bottom: 20px;
-        }
-        .file-upload input[type="file"] {
-            display: none;
-        }
-        .file-upload label {
-            display: block;
-            cursor: pointer;
-            color: #26a69a;
-        }
-        .file-upload label:hover {
-            text-decoration: underline;
-        }
-    </style>
+    <!-- External Stylesheet -->
+    <link href="styles.css" rel="stylesheet">
 </head>
 <body>
     <div class="container">
+        <!-- Title -->
         <h1 class="center-align">Lexicon Generator</h1>
+
+        <!-- File Upload Section -->
+        <div class="row file-upload">
+            <div class="input-field col s12">
+                <input id="fileInput" type="file" accept=".xml">
+                <label for="fileInput">Upload XML</label>
+            </div>
+            <div class="input-field col s12">
+                <input id="csvFileInput" type="file" accept=".csv">
+                <label for="csvFileInput">Upload CSV</label>
+            </div>
+        </div>
+
+        <!-- Input Fields for New Entries -->
         <div class="row">
             <div class="input-field col s6">
                 <input id="grapheme" type="text">
@@ -60,14 +51,12 @@
         </div>
         <button class="btn" onclick="lexiconGen.addEntry()">Add Entry</button>
 
+        <!-- Search, Filter, Sort, Entries per Page -->
         <div class="row">
-            <div class="input-field col s12">
+            <div class="input-field col s3">
                 <input id="searchInput" type="text">
                 <label for="searchInput">Search</label>
             </div>
-        </div>
-
-        <div class="row">
             <div class="input-field col s3">
                 <select id="typeFilter">
                     <option value="all" selected>All Types</option>
@@ -92,14 +81,17 @@
                 </select>
                 <label>Entries per Page</label>
             </div>
-            <div class="input-field col s3 file-upload">
-                <input id="fileInput" type="file" accept=".xml">
-                <label for="fileInput">Upload XML</label>
-                <input id="csvFileInput" type="file" accept=".csv">
-                <label for="csvFileInput">Upload CSV</label>
-            </div>
         </div>
 
+        <!-- Entries List -->
+        <ul id="entriesList" class="collection"></ul>
+
+        <!-- Pagination -->
+        <ul id="pagination" class="pagination"></ul>
+    </div>
+
+    <!-- Download Section -->
+    <div class="container btn-container">
         <button class="btn" id="downloadBtn">Download</button>
         <div class="input-field col s12">
             <select id="fileFormat">
@@ -109,10 +101,6 @@
             </select>
             <label>File Format</label>
         </div>
-
-        <ul id="entriesList" class="collection"></ul>
-
-        <ul id="pagination" class="pagination"></ul>
     </div>
 
     <!-- Materialize JS -->
