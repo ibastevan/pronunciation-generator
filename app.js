@@ -3,6 +3,7 @@ const entries = [];
 // Initialize Materialize components
 document.addEventListener('DOMContentLoaded', function() {
     M.FormSelect.init(document.querySelectorAll('select'), {});
+    M.updateTextFields(); // Ensure labels are updated
 });
 
 function addEntry() {
@@ -16,6 +17,8 @@ function addEntry() {
         document.getElementById('inputForm').reset();
         // Reset radio buttons to default selection
         document.querySelector('input[name="type"][value="phoneme"]').checked = true;
+        M.updateTextFields(); // Ensure labels are updated
+        M.FormSelect.init(document.querySelectorAll('select'), {}); // Reinitialize select elements
     } else {
         M.toast({html: 'All fields are required.', classes: 'rounded'});
     }
@@ -41,6 +44,11 @@ function editEntry(index) {
     document.getElementById('grapheme').value = entry.grapheme;
     document.getElementById('value').value = entry.value;
     document.querySelector(`input[name="type"][value="${entry.type}"]`).checked = true;
+
+    // Ensure Materialize updates the radio button appearance
+    M.updateTextFields(); // Ensure labels are updated
+    M.FormSelect.init(document.querySelectorAll('select'), {}); // Reinitialize select elements
+
     entries.splice(index, 1); // Remove the entry for re-adding with updated details
     updateEntriesList();
 }
