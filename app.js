@@ -7,15 +7,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function addEntry() {
     const grapheme = document.getElementById('grapheme').value.trim();
-    const type = document.getElementById('type').value;
+    const type = document.querySelector('input[name="type"]:checked').value;
     const value = document.getElementById('value').value.trim();
 
     if (grapheme && value) {
         entries.push({ grapheme, type, value });
         updateEntriesList();
         document.getElementById('inputForm').reset();
-        M.FormSelect.getInstance(document.querySelector('select')).destroy();
-        M.FormSelect.init(document.querySelectorAll('select'), {});
+        // Reset radio buttons to default selection
+        document.querySelector('input[name="type"][value="phoneme"]').checked = true;
     } else {
         M.toast({html: 'All fields are required.', classes: 'rounded'});
     }
@@ -39,10 +39,8 @@ function updateEntriesList() {
 function editEntry(index) {
     const entry = entries[index];
     document.getElementById('grapheme').value = entry.grapheme;
-    document.getElementById('type').value = entry.type;
     document.getElementById('value').value = entry.value;
-    M.FormSelect.getInstance(document.querySelector('select')).destroy();
-    M.FormSelect.init(document.querySelectorAll('select'), {});
+    document.querySelector(`input[name="type"][value="${entry.type}"]`).checked = true;
     entries.splice(index, 1); // Remove the entry for re-adding with updated details
     updateEntriesList();
 }
