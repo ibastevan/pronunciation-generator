@@ -3,130 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lexicon XML Generator</title>
+    <title>Lexicon Generator</title>
     <!-- Materialize CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        .input-field {
+            margin-bottom: 0;
+        }
+        .page-link {
+            cursor: pointer;
+        }
+        .page-item.active .page-link {
+            background-color: #26a69a;
+            border-color: #26a69a;
+        }
+        .file-upload {
+            margin-bottom: 20px;
+        }
+        .file-upload input[type="file"] {
+            display: none;
+        }
+        .file-upload label {
+            display: block;
+            cursor: pointer;
+            color: #26a69a;
+        }
+        .file-upload label:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <h1 class="center-align">Lexicon Generator</h1>
-        
-        <form id="inputForm">
-            <div class="row">
-                <div class="input-field col s6">
-                    <input id="grapheme" type="text" class="validate">
-                    <label for="grapheme">Grapheme</label>
-                </div>
-                <div class="input-field col s6">
-                    <input id="value" type="text" class="validate">
-                    <label for="value">Value</label>
-                </div>
-            </div>
-
-            <div class="row">
-                <p>Type:</p>
-                <p>
-                    <label>
-                        <input name="type" type="radio" value="phoneme" checked>
-                        <span>Phoneme</span>
-                    </label>
-                </p>
-                <p>
-                    <label>
-                        <input name="type" type="radio" value="alias">
-                        <span>Alias</span>
-                    </label>
-                </p>
-            </div>
-
-            <div class="row">
-                <button type="button" class="btn" onclick="addEntry()">Add Entry</button>
-            </div>
-        </form>
-
-        <!-- Search, Filter, Sort, Entries per Page -->
         <div class="row">
-            <div class="input-field col s12 m3">
-                <input id="searchInput" type="text" class="validate">
+            <div class="input-field col s6">
+                <input id="grapheme" type="text">
+                <label for="grapheme">Grapheme</label>
+            </div>
+            <div class="input-field col s6">
+                <input id="value" type="text">
+                <label for="value">Value</label>
+            </div>
+        </div>
+        <div class="row">
+            <p>
+                <label>
+                    <input name="type" type="radio" value="phoneme" checked />
+                    <span>Phoneme</span>
+                </label>
+                <label>
+                    <input name="type" type="radio" value="alias" />
+                    <span>Alias</span>
+                </label>
+            </p>
+        </div>
+        <button class="btn" onclick="lexiconGen.addEntry()">Add Entry</button>
+
+        <div class="row">
+            <div class="input-field col s12">
+                <input id="searchInput" type="text">
                 <label for="searchInput">Search</label>
             </div>
-            <div class="input-field col s12 m3">
+        </div>
+
+        <div class="row">
+            <div class="input-field col s3">
                 <select id="typeFilter">
                     <option value="all" selected>All Types</option>
                     <option value="phoneme">Phoneme</option>
                     <option value="alias">Alias</option>
                 </select>
-                <label>Filter by Type</label>
+                <label>Type Filter</label>
             </div>
-            <div class="input-field col s12 m3">
+            <div class="input-field col s3">
                 <select id="sortSelect">
                     <option value="grapheme" selected>Sort by Grapheme</option>
                     <option value="value">Sort by Value</option>
                 </select>
                 <label>Sort By</label>
             </div>
-            <div class="input-field col s12 m3">
+            <div class="input-field col s3">
                 <select id="entriesPerPage">
-                    <option value="10">10 entries per page</option>
-                    <option value="25" selected>25 entries per page</option>
-                    <option value="50">50 entries per page</option>
-                    <option value="100">100 entries per page</option>
+                    <option value="10">10</option>
+                    <option value="25" selected>25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
                 </select>
                 <label>Entries per Page</label>
             </div>
+            <div class="input-field col s3 file-upload">
+                <input id="fileInput" type="file" accept=".xml">
+                <label for="fileInput">Upload XML</label>
+                <input id="csvFileInput" type="file" accept=".csv">
+                <label for="csvFileInput">Upload CSV</label>
+            </div>
         </div>
 
-        <!-- Entries List -->
+        <button class="btn" id="downloadBtn">Download</button>
+        <div class="input-field col s12">
+            <select id="fileFormat">
+                <option value="xml" selected>XML</option>
+                <option value="pls">PLS</option>
+                <option value="csv">CSV</option>
+            </select>
+            <label>File Format</label>
+        </div>
+
         <ul id="entriesList" class="collection"></ul>
 
-        <!-- Pagination -->
-        <div class="row">
-            <ul id="pagination" class="pagination"></ul>
-        </div>
-
-        <!-- File Upload and Download -->
-        <div class="row">
-            <div class="input-field col s12 m6">
-                <div class="file-field input-field">
-                    <div class="btn">
-                        <span>Upload XML</span>
-                        <input type="file" id="fileInput">
-                    </div>
-                    <div class="file-path-wrapper">
-                        <input class="file-path validate" type="text" placeholder="Choose an XML file">
-                    </div>
-                </div>
-            </div>
-            <div class="input-field col s12 m6">
-                <select id="fileFormat" class="browser-default">
-                    <option value="xml" selected>XML</option>
-                    <option value="pls">PLS</option>
-                    <option value="csv">CSV</option>
-                </select>
-                <label>Download Format</label>
-                <button class="btn-large" onclick="downloadFile()">Download</button>
-            </div>
-        </div>
-
-        <!-- CSV Upload -->
-        <div class="row">
-            <div class="input-field col s12 m6">
-                <div class="file-field input-field">
-                    <div class="btn">
-                        <span>Upload CSV</span>
-                        <input type="file" id="csvFileInput">
-                    </div>
-                    <div class="file-path-wrapper">
-                        <input class="file-path validate" type="text" placeholder="Choose a CSV file">
-                    </div>
-                </div>
-            </div>
-        </div>
+        <ul id="pagination" class="pagination"></ul>
     </div>
 
     <!-- Materialize JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <!-- Application JS -->
     <script src="app.js"></script>
 </body>
 </html>
