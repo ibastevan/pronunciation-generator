@@ -2,14 +2,15 @@ const entries = [];
 
 function addEntry() {
     const grapheme = document.getElementById('grapheme').value.trim();
-    const phoneme = document.getElementById('phoneme').value.trim();
+    const type = document.getElementById('type').value;
+    const value = document.getElementById('value').value.trim();
 
-    if (grapheme && phoneme) {
-        entries.push({ grapheme, phoneme });
+    if (grapheme && value) {
+        entries.push({ grapheme, type, value });
         updateEntriesList();
         document.getElementById('inputForm').reset();
     } else {
-        alert('Both fields are required.');
+        alert('All fields are required.');
     }
 }
 
@@ -18,7 +19,7 @@ function updateEntriesList() {
     entriesList.innerHTML = '';
     entries.forEach(entry => {
         const li = document.createElement('li');
-        li.textContent = `${entry.grapheme}: ${entry.phoneme}`;
+        li.textContent = `${entry.grapheme}: ${entry.type} - ${entry.value}`;
         entriesList.appendChild(li);
     });
 }
@@ -30,7 +31,7 @@ function generateXML() {
     entries.forEach(entry => {
         xml += `  <entry>\n`;
         xml += `    <grapheme>${escapeXML(entry.grapheme)}</grapheme>\n`;
-        xml += `    <phoneme>${escapeXML(entry.phoneme)}</phoneme>\n`;
+        xml += `    <${entry.type}>${escapeXML(entry.value)}</${entry.type}>\n`;
         xml += `  </entry>\n`;
     });
     
