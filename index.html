@@ -16,23 +16,26 @@
 <body>
     <div class="container">
         <h1 class="center-align">Lexicon XML Generator</h1>
-        <form id="inputForm">
-            <div class="input-field col s12">
+        
+        <form id="inputForm" class="row">
+            <div class="input-field col s12 m6">
                 <input type="text" id="grapheme" required>
                 <label for="grapheme">Grapheme</label>
             </div>
-            <div class="input-field col s12">
+            <div class="input-field col s12 m6">
                 <select id="type" required>
                     <option value="phoneme" selected>Phoneme</option>
                     <option value="alias">Alias</option>
                 </select>
                 <label>Type</label>
             </div>
-            <div class="input-field col s12">
+            <div class="input-field col s12 m6">
                 <input type="text" id="value" required>
                 <label for="value">Value</label>
             </div>
-            <button type="button" class="btn waves-effect waves-light" onclick="addEntry()">Add Entry</button>
+            <div class="input-field col s12 m6">
+                <button type="button" class="btn waves-effect waves-light" onclick="addEntry()">Add Entry</button>
+            </div>
         </form>
 
         <h2 class="center-align">Entries</h2>
@@ -40,7 +43,7 @@
         
         <h2 class="center-align">Upload XML</h2>
         <input type="file" id="fileInput" />
-        
+
         <button id="downloadButton" class="btn waves-effect waves-light" onclick="downloadXML()">Download XML</button>
     </div>
 
