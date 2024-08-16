@@ -1,9 +1,16 @@
 const entries = [];
+let currentPage = 1;
+let entriesPerPage = 25; // Default entries per page
+let filteredEntries = [];
 
 // Initialize Materialize components
 document.addEventListener('DOMContentLoaded', function() {
     M.FormSelect.init(document.querySelectorAll('select'), {});
     M.updateTextFields(); // Ensure labels are updated
+    setupPagination();
+    setupSorting();
+    setupFiltering();
+    loadEntries();
 });
 
 function addEntry() {
@@ -15,7 +22,6 @@ function addEntry() {
         entries.push({ grapheme, type, value });
         updateEntriesList();
         document.getElementById('inputForm').reset();
-        // Reset radio buttons to default selection
         document.querySelector('input[name="type"][value="phoneme"]').checked = true;
         M.updateTextFields(); // Ensure labels are updated
         M.FormSelect.init(document.querySelectorAll('select'), {}); // Reinitialize select elements
@@ -24,37 +30,102 @@ function addEntry() {
     }
 }
 
+function setupPagination() {
+    const paginationSelect = document.getElementById('entriesPerPage');
+    paginationSelect.addEventListener('change', function() {
+        entriesPerPage = parseInt(this.value);
+        currentPage = 1;
+        updateEntriesList();
+    });
+}
+
+function setupFiltering() {
+    const searchInput = document.getElementById('searchInput');
+    const typeFilter = document.getElementById('typeFilter');
+
+    searchInput.addEventListener('input', updateEntriesList);
+    typeFilter.addEventListener('change', updateEntriesList);
+}
+
+function setupSorting() {
+    const sortSelect = document.getElementById('sortSelect');
+    sortSelect.addEventListener('change', updateEntriesList);
+}
+
 function updateEntriesList() {
+    filteredEntries = entries.filter(entry => {
+        const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+        const filterType = document.getElementById('typeFilter').value;
+
+        return (entry.grapheme.toLowerCase().includes(searchQuery) ||
+                entry.value.toLowerCase().includes(searchQuery)) &&
+               (filterType === 'all' || entry.type === filterType);
+    });
+
+    sortEntries();
+    renderPagination();
+    renderEntries();
+}
+
+function sortEntries() {
+    const sortOption = document.getElementById('sortSelect').value;
+    filteredEntries.sort((a, b) => {
+        if (a[sortOption] < b[sortOption]) return -1;
+        if (a[sortOption] > b[sortOption]) return 1;
+        return 0;
+    });
+}
+
+function renderPagination() {
+    const totalPages = Math.ceil(filteredEntries.length / entriesPerPage);
+    let paginationHTML = '';
+
+    for (let i = 1; i <= totalPages; i++) {
+        paginationHTML += `<li class="page-item ${i === currentPage ? 'active' : ''}">
+            <a href="#!" class="page-link" onclick="changePage(${i})">${i}</a>
+        </li>`;
+    }
+
+    document.getElementById('pagination').innerHTML = paginationHTML;
+}
+
+function renderEntries() {
+    const startIndex = (currentPage - 1) * entriesPerPage;
+    const endIndex = Math.min(startIndex + entriesPerPage, filteredEntries.length);
     const entriesList = document.getElementById('entriesList');
+
     entriesList.innerHTML = '';
-    entries.forEach((entry, index) => {
+    for (let i = startIndex; i < endIndex; i++) {
+        const entry = filteredEntries[i];
         const li = document.createElement('li');
         li.className = 'collection-item';
         li.innerHTML = `${entry.grapheme}: ${entry.type} - ${entry.value}
                         <a href="#!" class="secondary-content">
-                            <i class="material-icons" onclick="editEntry(${index})">edit</i>
-                            <i class="material-icons" onclick="removeEntry(${index})">delete</i>
+                            <i class="material-icons" onclick="editEntry(${i})">edit</i>
+                            <i class="material-icons" onclick="removeEntry(${i})">delete</i>
                         </a>`;
         entriesList.appendChild(li);
-    });
+    }
+}
+
+function changePage(page) {
+    currentPage = page;
+    renderEntries();
 }
 
 function editEntry(index) {
-    const entry = entries[index];
+    const entry = filteredEntries[index];
     document.getElementById('grapheme').value = entry.grapheme;
     document.getElementById('value').value = entry.value;
     document.querySelector(`input[name="type"][value="${entry.type}"]`).checked = true;
-
-    // Ensure Materialize updates the radio button appearance
     M.updateTextFields(); // Ensure labels are updated
     M.FormSelect.init(document.querySelectorAll('select'), {}); // Reinitialize select elements
-
-    entries.splice(index, 1); // Remove the entry for re-adding with updated details
+    entries.splice(entries.indexOf(filteredEntries[index]), 1); // Remove the entry for re-adding with updated details
     updateEntriesList();
 }
 
 function removeEntry(index) {
-    entries.splice(index, 1);
+    entries.splice(entries.indexOf(filteredEntries[index]), 1);
     updateEntriesList();
 }
 
