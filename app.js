@@ -151,6 +151,26 @@ function generateXML() {
     return xml;
 }
 
+function generatePLS() {
+    let pls = '';
+    
+    entries.forEach(entry => {
+        pls += `${entry.grapheme}=${entry.value}\n`;
+    });
+    
+    return pls;
+}
+
+function generateCSV() {
+    let csv = 'Grapheme,Type,Value\n';
+    
+    entries.forEach(entry => {
+        csv += `${entry.grapheme},${entry.type},${entry.value}\n`;
+    });
+    
+    return csv;
+}
+
 function escapeXML(unsafe) {
     return unsafe.replace(/[<>&'"]/g, function (c) {
         switch (c) {
@@ -163,13 +183,31 @@ function escapeXML(unsafe) {
     });
 }
 
-function downloadXML() {
-    const xml = generateXML();
-    const blob = new Blob([xml], { type: 'application/xml' });
+function downloadFile() {
+    const format = document.getElementById('fileFormat').value;
+    let content = '';
+    let fileExtension = '';
+
+    switch (format) {
+        case 'xml':
+            content = generateXML();
+            fileExtension = 'xml';
+            break;
+        case 'pls':
+            content = generatePLS();
+            fileExtension = 'pls';
+            break;
+        case 'csv':
+            content = generateCSV();
+            fileExtension = 'csv';
+            break;
+    }
+
+    const blob = new Blob([content], { type: `text/${format}` });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'lexicon.xml';
+    a.download = `lexicon.${fileExtension}`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -190,7 +228,6 @@ function loadEntriesFromLocalStorage() {
 document.getElementById('fileInput').addEventListener('change', function(event) {
     const file = event.target.files[0];
     if (file) {
-        // Ensure the file is XML based on the file extension or MIME type
         if (file.type === 'application/xml' || file.name.endsWith('.xml')) {
             const reader = new FileReader();
             reader.onload = function(e) {
@@ -211,16 +248,15 @@ function parseXML(xmlString) {
         const parser = new DOMParser();
         const xmlDoc = parser.parseFromString(xmlString, "application/xml");
 
-        // Check if there were any parsing errors
         const parserError = xmlDoc.querySelector('parsererror');
         if (parserError) {
             M.toast({html: 'Invalid XML file. Please upload a correct XML file.', classes: 'rounded'});
-            console.error('XML Parsing Error:', parserError.textContent); // Log error for debugging
+            console.error('XML Parsing Error:', parserError.textContent); 
             return;
         }
 
         const entriesList = xmlDoc.getElementsByTagName("entry");
-        entries.length = 0; // Clear existing entries
+        entries.length = 0; 
         
         for (let i = 0; i < entriesList.length; i++) {
             const entry = entriesList[i];
@@ -240,10 +276,50 @@ function parseXML(xmlString) {
             entries.push({ grapheme, type, value });
         }
         
-        saveEntriesToLocalStorage(); // Save new entries to local storage
+        saveEntriesToLocalStorage(); 
         updateEntriesList();
     } catch (error) {
         M.toast({html: 'Error parsing XML file.', classes: 'rounded'});
-        console.error('Parsing Error:', error); // Log error for debugging
+        console.error('Parsing Error:', error);
     }
+}
+
+document.getElementById('csvFileInput').addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    if (file) {
+        if (file.type === 'text/csv' || file.name.endsWith('.csv')) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const csvString = e.target.result;
+                parseCSV(csvString);
+            };
+            reader.readAsText(file);
+        } else {
+            M.toast({html: 'Please upload a valid CSV file with .csv extension.', classes: 'rounded'});
+        }
+    } else {
+        M.toast({html: 'No file selected.', classes: 'rounded'});
+    }
+});
+
+function parseCSV(csvString) {
+    const lines = csvString.trim().split('\n');
+    const headers = lines.shift().split(',');
+
+    if (headers[0] !== 'Grapheme' || headers[1] !== 'Type' || headers[2] !== 'Value') {
+        M.toast({html: 'Invalid CSV format.', classes: 'rounded'});
+        return;
+    }
+
+    entries.length = 0; 
+
+    lines.forEach(line => {
+        const [grapheme, type, value] = line.split(',');
+        if (grapheme && type && value) {
+            entries.push({ grapheme, type, value });
+        }
+    });
+
+    saveEntriesToLocalStorage();
+    updateEntriesList();
 }
