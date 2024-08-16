@@ -21,9 +21,11 @@ class LexiconGenerator {
             this.updateEntriesList();
         });
 
+        // Event listeners
         document.getElementById('fileInput').addEventListener('change', (event) => this.handleFileUpload(event));
         document.getElementById('csvFileInput').addEventListener('change', (event) => this.handleCSVUpload(event));
         document.getElementById('fileFormat').addEventListener('change', () => this.updateEntriesList());
+        document.getElementById('downloadBtn').addEventListener('click', () => this.downloadFile());
     }
 
     addEntry() {
