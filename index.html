@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lexicon XML Generator</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        input, button { margin: 10px 0; display: block; }
+    </style>
+</head>
+<body>
+    <h1>Lexicon XML Generator</h1>
+    <form id="inputForm">
+        <label for="grapheme">Grapheme:</label>
+        <input type="text" id="grapheme" required>
+        
+        <label for="phoneme">Phoneme or Alias:</label>
+        <input type="text" id="phoneme" required>
+        
+        <button type="button" onclick="addEntry()">Add Entry</button>
+    </form>
+    
+    <h2>Entries</h2>
+    <ul id="entriesList"></ul>
+    
+    <button id="downloadButton" onclick="downloadXML()">Download XML</button>
+
+    <script src="app.js"></script>
+</body>
+</html>
