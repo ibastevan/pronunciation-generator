@@ -4,34 +4,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lexicon XML Generator</title>
+    <!-- Google Material Icons -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <!-- Materialize CSS for Material Design -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        input, select, button { margin: 10px 0; display: block; }
+        .container { margin-top: 20px; }
+        .entry-actions { margin-left: 10px; }
     </style>
 </head>
 <body>
-    <h1>Lexicon XML Generator</h1>
-    <form id="inputForm">
-        <label for="grapheme">Grapheme:</label>
-        <input type="text" id="grapheme" required>
-        
-        <label for="type">Type:</label>
-        <select id="type" required>
-            <option value="phoneme">Phoneme</option>
-            <option value="alias">Alias</option>
-        </select>
-        
-        <label for="value">Value:</label>
-        <input type="text" id="value" required>
-        
-        <button type="button" onclick="addEntry()">Add Entry</button>
-    </form>
-    
-    <h2>Entries</h2>
-    <ul id="entriesList"></ul>
-    
-    <button id="downloadButton" onclick="downloadXML()">Download XML</button>
+    <div class="container">
+        <h1 class="center-align">Lexicon XML Generator</h1>
+        <form id="inputForm">
+            <div class="input-field col s12">
+                <input type="text" id="grapheme" required>
+                <label for="grapheme">Grapheme</label>
+            </div>
+            <div class="input-field col s12">
+                <select id="type" required>
+                    <option value="phoneme" selected>Phoneme</option>
+                    <option value="alias">Alias</option>
+                </select>
+                <label>Type</label>
+            </div>
+            <div class="input-field col s12">
+                <input type="text" id="value" required>
+                <label for="value">Value</label>
+            </div>
+            <button type="button" class="btn waves-effect waves-light" onclick="addEntry()">Add Entry</button>
+        </form>
 
+        <h2 class="center-align">Entries</h2>
+        <ul id="entriesList" class="collection"></ul>
+        
+        <h2 class="center-align">Upload XML</h2>
+        <input type="file" id="fileInput" />
+        
+        <button id="downloadButton" class="btn waves-effect waves-light" onclick="downloadXML()">Download XML</button>
+    </div>
+
+    <!-- Materialize JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
