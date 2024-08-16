@@ -1,5 +1,10 @@
 const entries = [];
 
+// Initialize Materialize components
+document.addEventListener('DOMContentLoaded', function() {
+    M.FormSelect.init(document.querySelectorAll('select'), {});
+});
+
 function addEntry() {
     const grapheme = document.getElementById('grapheme').value.trim();
     const type = document.getElementById('type').value;
@@ -9,19 +14,42 @@ function addEntry() {
         entries.push({ grapheme, type, value });
         updateEntriesList();
         document.getElementById('inputForm').reset();
+        M.FormSelect.getInstance(document.querySelector('select')).destroy();
+        M.FormSelect.init(document.querySelectorAll('select'), {});
     } else {
-        alert('All fields are required.');
+        M.toast({html: 'All fields are required.', classes: 'rounded'});
     }
 }
 
 function updateEntriesList() {
     const entriesList = document.getElementById('entriesList');
     entriesList.innerHTML = '';
-    entries.forEach(entry => {
+    entries.forEach((entry, index) => {
         const li = document.createElement('li');
-        li.textContent = `${entry.grapheme}: ${entry.type} - ${entry.value}`;
+        li.className = 'collection-item';
+        li.innerHTML = `${entry.grapheme}: ${entry.type} - ${entry.value}
+                        <a href="#!" class="secondary-content">
+                            <i class="material-icons" onclick="editEntry(${index})">edit</i>
+                            <i class="material-icons" onclick="removeEntry(${index})">delete</i>
+                        </a>`;
         entriesList.appendChild(li);
     });
+}
+
+function editEntry(index) {
+    const entry = entries[index];
+    document.getElementById('grapheme').value = entry.grapheme;
+    document.getElementById('type').value = entry.type;
+    document.getElementById('value').value = entry.value;
+    M.FormSelect.getInstance(document.querySelector('select')).destroy();
+    M.FormSelect.init(document.querySelectorAll('select'), {});
+    entries.splice(index, 1); // Remove the entry for re-adding with updated details
+    updateEntriesList();
+}
+
+function removeEntry(index) {
+    entries.splice(index, 1);
+    updateEntriesList();
 }
 
 function generateXML() {
@@ -62,4 +90,45 @@ function downloadXML() {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+}
+
+document.getElementById('fileInput').addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    if (file && file.type === 'application/xml') {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const xmlString = e.target.result;
+            parseXML(xmlString);
+        };
+        reader.readAsText(file);
+    } else {
+        M.toast({html: 'Please upload a valid XML file.', classes: 'rounded'});
+    }
+});
+
+function parseXML(xmlString) {
+    const parser = new DOMParser();
+    const xmlDoc = parser.parseFromString(xmlString, "application/xml");
+    const entriesList = xmlDoc.getElementsByTagName("entry");
+    
+    entries.length = 0; // Clear existing entries
+    for (let i = 0; i < entriesList.length; i++) {
+        const entry = entriesList[i];
+        const grapheme = entry.getElementsByTagName("grapheme")[0].textContent;
+        const phoneme = entry.getElementsByTagName("phoneme")[0];
+        const alias = entry.getElementsByTagName("alias")[0];
+        
+        let type = 'phoneme';
+        let value = '';
+        if (phoneme) {
+            value = phoneme.textContent;
+        } else if (alias) {
+            type = 'alias';
+            value = alias.textContent;
+        }
+        
+        entries.push({ grapheme, type, value });
+    }
+    
+    updateEntriesList();
 }
