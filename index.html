@@ -16,11 +16,11 @@
 
         <!-- File Upload Section -->
         <div class="row file-upload">
-            <div class="input-field col s6">
+            <div class="input-field col m6 s12">
                 <input id="fileInput" type="file" accept=".xml">
                 <label for="fileInput">Upload XML</label>
             </div>
-            <div class="input-field col s6">
+            <div class="input-field col m6 s12">
                 <input id="csvFileInput" type="file" accept=".csv">
                 <label for="csvFileInput">Upload CSV</label>
             </div>
@@ -28,11 +28,11 @@
 
         <!-- Input Fields for New Entries -->
         <div class="row">
-            <div class="input-field col s6">
+            <div class="input-field col m6 s12">
                 <input id="grapheme" type="text">
                 <label for="grapheme">Grapheme</label>
             </div>
-            <div class="input-field col s6">
+            <div class="input-field col m6 s12">
                 <input id="value" type="text">
                 <label for="value">Value</label>
             </div>
@@ -53,11 +53,11 @@
 
         <!-- Search, Filter, Sort, Entries per Page -->
         <div class="row">
-            <div class="input-field col s3">
+            <div class="input-field col m3 s12">
                 <input id="searchInput" type="text">
                 <label for="searchInput">Search</label>
             </div>
-            <div class="input-field col s3">
+            <div class="input-field col m3 s12">
                 <select id="typeFilter">
                     <option value="all" selected>All Types</option>
                     <option value="phoneme">Phoneme</option>
@@ -65,14 +65,14 @@
                 </select>
                 <label>Type Filter</label>
             </div>
-            <div class="input-field col s3">
+            <div class="input-field col m3 s12">
                 <select id="sortSelect">
                     <option value="grapheme" selected>Sort by Grapheme</option>
                     <option value="value">Sort by Value</option>
                 </select>
                 <label>Sort By</label>
             </div>
-            <div class="input-field col s3">
+            <div class="input-field col m3 s12">
                 <select id="entriesPerPage">
                     <option value="10">10</option>
                     <option value="25" selected>25</option>
@@ -93,7 +93,7 @@
     <!-- Download Section -->
     <div class="container btn-container">
         <div class="row">
-            <div class="input-field col s6">
+            <div class="input-field col m6 s12">
                 <select id="fileFormat">
                     <option value="xml" selected>XML</option>
                     <option value="pls">PLS</option>
@@ -101,7 +101,7 @@
                 </select>
                 <label>File Format</label>
             </div>
-            <div class="col s6">
+            <div class="col m6 s12">
                 <button class="btn" id="downloadBtn">Download</button>
             </div>
         </div>
